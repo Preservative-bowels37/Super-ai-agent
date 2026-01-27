@@ -67,6 +67,13 @@
             <version>1.0.0-beta2</version>
         </dependency>
 
+        <!-- 支持结构化输出 -->
+        <dependency>
+            <groupId>com.github.victools</groupId>
+            <artifactId>jsonschema-generator</artifactId>
+            <version>4.38.0</version>
+        </dependency>
+
         <!-- Spring AI Ollama 支持 -->
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.ai</groupId>-->

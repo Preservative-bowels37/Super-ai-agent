@@ -1,18 +1,17 @@
 spring:
   application:
-  name: Super-ai-agent
+    name: Super-ai-agent
   profiles:
     active: local
-  main:
-    allow-bean-definition-overriding: true
-  ai:
-    ollama:
-      base-url: http://localhost:11434
-      chat:
-        model: deepseek-r1:8b
-        options:
-          temperature: 0.7
-
+#  main:
+#    allow-bean-definition-overriding: true
+#  ai:
+#    ollama:
+#      base-url: http://localhost:11434
+#      chat:
+#        model: deepseek-r1:8b
+#        options:
+#          temperature: 0.7
 server:
   port: 8123
   servlet:
@@ -34,4 +33,8 @@ knife4j:
   enable: true
   setting:
     language: zh_cn
+#logging:
+#  level:
+#    org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor: debug
+
 
