@@ -2,6 +2,7 @@ package com.monuo.superaiagent.app;
 
 import com.monuo.superaiagent.advisor.MyLoggerAdvisor;
 import com.monuo.superaiagent.advisor.ReReadingAdvisor;
+import com.monuo.superaiagent.chatmemory.FileBasedChatMemory;
 import com.monuo.superaiagent.constant.SystemConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -20,20 +21,35 @@ public class LoveApp {
 
     private final ChatClient chatClient;
 
-    public LoveApp(ChatModel dashscopeChatModel, ChatMemory chatMemory) {
-        this.chatClient = ChatClient.builder(dashscopeChatModel)
+//    //基于内存的对话记忆
+//    public LoveApp(ChatModel dashscopeChatModel, ChatMemory chatMemory) {
+//        this.chatClient = ChatClient.builder(dashscopeChatModel)
+//                .defaultSystem(SystemConstants.SYSTEM_PROMPT)
+//                .defaultAdvisors(
+////                        new SimpleLoggerAdvisor(),
+//                        // 自定义 Advisor，可按需开启
+//                        new MyLoggerAdvisor(),
+//                        // 自定义 Re2 Advisor，可按需开启
+
+    /// /                        new ReReadingAdvisor(),
+//                        MessageChatMemoryAdvisor.builder(chatMemory).build()
+//                )
+//                .build();
+//    }
+
+    //基于文件的对话记忆
+    public LoveApp(ChatModel dashscopeChatModel) {
+        // 初始化基于文件的对话记忆
+        String fileDir = System.getProperty("user.dir") + "/chat-memory";
+        ChatMemory chatMemory = new FileBasedChatMemory(fileDir);
+        chatClient = ChatClient.builder(dashscopeChatModel)
                 .defaultSystem(SystemConstants.SYSTEM_PROMPT)
                 .defaultAdvisors(
-//                        new SimpleLoggerAdvisor(),
-                        // 自定义 Advisor，可按需开启
-                        new MyLoggerAdvisor(),
-                        // 自定义 Re2 Advisor，可按需开启
-//                        new ReReadingAdvisor(),
                         MessageChatMemoryAdvisor.builder(chatMemory).build()
-
                 )
                 .build();
     }
+
 
     /**
      * AI 基础对话 （支持多轮对话）
@@ -56,6 +72,7 @@ public class LoveApp {
     record LoveReport(String title, List<String> suggestions) {
     }
 
+    //方式一
 //    /**
 //     * 在系统提示词的【输出格式要求】部分后插入报告要求
 //     * @param originalPrompt 原始系统提示词
@@ -96,12 +113,14 @@ public class LoveApp {
 //        return loveReport;
 //    }
 
-        /**
+    //方式二
+
+    /**
      * AI 恋爱报告功能（实战结构化输出）
      * AI会自动从用户消息中提取用户名
      *
      * @param message 用户消息
-     * @param chatId 对话ID
+     * @param chatId  对话ID
      * @return 恋爱报告
      */
     public LoveReport doChatWithReport(String message, String chatId) {
@@ -115,7 +134,5 @@ public class LoveApp {
         log.info("loveReport: {}", loveReport);
         return loveReport;
     }
-
-
 
 }

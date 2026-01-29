@@ -15,7 +15,7 @@ import com.alibaba.dashscope.utils.JsonUtils;
 /**
  * 阿里云灵积 AI SDK 调用
  */
-public class Main {
+public class Textinput {
     public static GenerationResult callWithMessage() throws ApiException, NoApiKeyException, InputRequiredException {
         Generation gen = new Generation();// 初始化模型
         Message systemMsg = Message.builder()

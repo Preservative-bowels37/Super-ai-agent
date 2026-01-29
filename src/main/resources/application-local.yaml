@@ -1,6 +1,6 @@
 spring:
   application:
-  name: Super-ai-agent
+   name: Super-ai-agent
   ai:
     dashscope:
       api-key: ${DASHSCOPE_API_KEY}
