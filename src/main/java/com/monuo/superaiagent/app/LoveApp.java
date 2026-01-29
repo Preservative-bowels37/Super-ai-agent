@@ -2,7 +2,7 @@ package com.monuo.superaiagent.app;
 
 import com.monuo.superaiagent.advisor.MyLoggerAdvisor;
 import com.monuo.superaiagent.advisor.ReReadingAdvisor;
-import com.monuo.superaiagent.chatmemory.FileBasedChatMemory;
+import com.monuo.superaiagent.chatmemory.DatabaseBasedChatMemory;
 import com.monuo.superaiagent.constant.SystemConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -37,15 +37,12 @@ public class LoveApp {
 //                .build();
 //    }
 
-    //基于文件的对话记忆
-    public LoveApp(ChatModel dashscopeChatModel) {
-        // 初始化基于文件的对话记忆
-        String fileDir = System.getProperty("user.dir") + "/chat-memory";
-        ChatMemory chatMemory = new FileBasedChatMemory(fileDir);
+    //基于数据库的对话记忆
+    public LoveApp(ChatModel dashscopeChatModel, DatabaseBasedChatMemory databaseBasedChatMemory) {
         chatClient = ChatClient.builder(dashscopeChatModel)
                 .defaultSystem(SystemConstants.SYSTEM_PROMPT)
                 .defaultAdvisors(
-                        MessageChatMemoryAdvisor.builder(chatMemory).build()
+                        MessageChatMemoryAdvisor.builder(databaseBasedChatMemory).build()
                 )
                 .build();
     }
