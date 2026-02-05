@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.chat.client.advisor.api.Advisor;
 import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
@@ -60,7 +61,7 @@ public class LoveApp {
 
 
     //基于数据库的对话记忆
-    public LoveApp(ChatModel dashscopeChatModel, DatabaseBasedChatMemory databaseBasedChatMemory) {
+    public LoveApp(ChatModel dashscopeChatModel, ChatMemory chatMemory) {
         chatClient = ChatClient.builder(dashscopeChatModel)
                 .defaultSystem(SystemConstants.SYSTEM_PROMPT)
                 .defaultAdvisors(
@@ -68,7 +69,7 @@ public class LoveApp {
                         new MyLoggerAdvisor(),
                         // 自定义 Re2 Advisor，可按需开启
                         new ReReadingAdvisor(),
-                        MessageChatMemoryAdvisor.builder(databaseBasedChatMemory).build()
+                        MessageChatMemoryAdvisor.builder(chatMemory).build()
                 )
                 .build();
     }
@@ -162,6 +163,9 @@ public class LoveApp {
     @Resource
     private VectorStore loveAppVectorStore;
 
+    @Resource
+    private Advisor loveAppRagCloudAdvisor;
+
     /**
      * 和 RAG 知识库进行问答
      *
@@ -174,7 +178,10 @@ public class LoveApp {
                 .prompt()
                 .user(message)
                 .advisors(spec -> spec.param(ChatMemory.CONVERSATION_ID, chatId))
-                .advisors(QuestionAnswerAdvisor.builder(loveAppVectorStore).build())
+                //应用RAG知识库问答
+//                .advisors(QuestionAnswerAdvisor.builder(loveAppVectorStore).build())
+                // 应用RAG检索增强功能（基于云知识库服务）
+                .advisors(loveAppRagCloudAdvisor)
                 .call()
                 .content();
         log.info("content: {}", content);
