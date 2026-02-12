@@ -1,5 +1,6 @@
 package com.monuo.superaiagent.config;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -18,16 +19,14 @@ import javax.sql.DataSource;
 public class DataSourceConfig {
 
     /**
-     * ========== MySQL 主数据源 ==========
+     * ========== MySQL 主数据源（Spring Boot 自动装配）==========
      * 用于 MyBatis-Plus 等业务操作
      */
     @Primary
     @Bean(name = "primaryDataSource")
     @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource primaryDataSource() {
-        return DataSourceBuilder.create()
-                .driverClassName("com.mysql.cj.jdbc.Driver")
-                .build();
+        return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
 
     /**
@@ -37,9 +36,7 @@ public class DataSourceConfig {
     @Bean(name = "pgVectorDataSource")
     @ConfigurationProperties(prefix = "pgvector.datasource")
     public DataSource pgVectorDataSource() {
-        return DataSourceBuilder.create()
-                .driverClassName("org.postgresql.Driver")
-                .build();
+        return DataSourceBuilder.create().build();
     }
 
     /**

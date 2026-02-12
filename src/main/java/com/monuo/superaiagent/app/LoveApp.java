@@ -5,6 +5,8 @@ import com.monuo.superaiagent.advisor.ReReadingAdvisor;
 import com.monuo.superaiagent.chatmemory.DatabaseBasedChatMemory;
 import com.monuo.superaiagent.chatmemory.FileBasedChatMemory;
 import com.monuo.superaiagent.constant.SystemConstants;
+import com.monuo.superaiagent.rag.LoveAppRagCustomAdvisorFactory;
+import com.monuo.superaiagent.rag.QueryRewriter;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -61,15 +63,15 @@ public class LoveApp {
 
 
     //基于数据库的对话记忆
-    public LoveApp(ChatModel dashscopeChatModel, ChatMemory chatMemory) {
+    public LoveApp(ChatModel dashscopeChatModel, DatabaseBasedChatMemory databaseBasedChatMemory) {
         chatClient = ChatClient.builder(dashscopeChatModel)
                 .defaultSystem(SystemConstants.SYSTEM_PROMPT)
                 .defaultAdvisors(
                         // 自定义 Advisor，可按需开启
                         new MyLoggerAdvisor(),
                         // 自定义 Re2 Advisor，可按需开启
-                        new ReReadingAdvisor(),
-                        MessageChatMemoryAdvisor.builder(chatMemory).build()
+//                        new ReReadingAdvisor(),
+                        MessageChatMemoryAdvisor.builder(databaseBasedChatMemory).build()
                 )
                 .build();
     }
@@ -169,6 +171,9 @@ public class LoveApp {
     @Resource
     private VectorStore pgVectorVectorStore;
 
+    @Resource
+    private QueryRewriter queryRewriter;
+
     /**
      * 和 RAG 知识库进行问答
      *
@@ -177,16 +182,26 @@ public class LoveApp {
      * @return
      */
     public String doChatWithRag(String message, String chatId) {
+        // 查询重写
+        String rewrittenMessage = queryRewriter.doQueryRewrite(message);
         String content = chatClient
                 .prompt()
-                .user(message)
+                // 使用改写后的查询
+                .user(rewrittenMessage)
+                .advisors(new MyLoggerAdvisor())
                 .advisors(spec -> spec.param(ChatMemory.CONVERSATION_ID, chatId))
                 //应用RAG知识库问答
-                .advisors(QuestionAnswerAdvisor.builder(loveAppVectorStore).build())
+//                .advisors(QuestionAnswerAdvisor.builder(loveAppVectorStore).build())
                 // 应用RAG检索增强功能（基于云知识库服务）
 //                .advisors(loveAppRagCloudAdvisor)
                 // 应用RAG检索增强功能（基于 PgVector 向量存储）
 //                .advisors(QuestionAnswerAdvisor.builder(pgVectorVectorStore).build())
+                //应用自定义的 RAG 检索增强服务（文档查询器 + 上下文增强器）
+                .advisors(
+                        LoveAppRagCustomAdvisorFactory.createLoveAppRagCustomAdvisor(
+                                loveAppVectorStore, "单身"
+                        )
+                )
                 .call()
                 .content();
         log.info("content: {}", content);

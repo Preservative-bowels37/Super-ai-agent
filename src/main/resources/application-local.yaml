@@ -1,14 +1,15 @@
 spring:
   application:
     name: Super-ai-agent
-
   # 主数据源（MySQL - 用于 MyBatis-Plus）
   datasource:
-    url: jdbc:mysql://localhost:3306/super_ai_agent?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    jdbc-url: jdbc:mysql://localhost:3306/super_ai_agent?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
   ai:
     dashscope:
       api-key: ${DASHSCOPE_API_KEY}
@@ -37,4 +38,3 @@ mybatis-plus:
       logic-delete-field: isDelete
       logic-delete-value: 1
       logic-not-delete-value: 0
-

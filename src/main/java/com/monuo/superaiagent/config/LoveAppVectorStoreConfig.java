@@ -2,6 +2,9 @@ package com.monuo.superaiagent.config;
 
 import com.alibaba.cloud.ai.dashscope.embedding.DashScopeEmbeddingModel;
 import com.monuo.superaiagent.rag.LoveAppDocumentLoader;
+
+import com.monuo.superaiagent.rag.MyKeywordEnricher;
+import com.monuo.superaiagent.rag.MyTokenTextSplitter;
 import jakarta.annotation.Resource;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.embedding.EmbeddingModel;
@@ -21,13 +24,23 @@ public class LoveAppVectorStoreConfig {
     @Resource
     private LoveAppDocumentLoader loveAppDocumentLoader;
 
+    @Resource
+    private MyKeywordEnricher myKeywordEnricher;
+
+    @Resource
+    private MyTokenTextSplitter myTokenTextSplitter;
+
     @Bean
     VectorStore loveAppVectorStore(DashScopeEmbeddingModel dashscopeEmbeddingModel) {
         SimpleVectorStore simpleVectorStore = SimpleVectorStore.builder(dashscopeEmbeddingModel)
                 .build();
         // 加载文档
         List<Document> documents = loveAppDocumentLoader.loadMarkdowns();
-        simpleVectorStore.add(documents);
+        // 自主切分文档
+//        documents = myTokenTextSplitter.splitCustomized(documents);
+        // 自动补充关键词元信息
+        List<Document> enrichedDocuments = myKeywordEnricher.enrichDocuments(documents);
+        simpleVectorStore.add(enrichedDocuments);
         return simpleVectorStore;
     }
 

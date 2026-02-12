@@ -9,6 +9,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,11 +36,20 @@ public class LoveAppDocumentLoader {
             Resource[] resources = resourcePatternResolver.getResources("classpath*:document/*.md");
             for (Resource resource : resources) {
                 String filename = resource.getFilename();
+                // 从文件名中提取状态：格式为 "xxx - 状态篇.md"
+                // 例如: "恋爱常见问题和回答 - 单身篇.md" → status = "单身"
+                String status = "";
+                int dashIndex = filename.lastIndexOf(" - ");
+                int suffixIndex = filename.lastIndexOf("篇.md");
+                if (dashIndex != -1 && suffixIndex != -1) {
+                    status = filename.substring(dashIndex + 3, suffixIndex);
+                }
                 MarkdownDocumentReaderConfig config = MarkdownDocumentReaderConfig.builder()
                         .withHorizontalRuleCreateDocument(true)
                         .withIncludeCodeBlock(false)
                         .withIncludeBlockquote(false)
                         .withAdditionalMetadata("filename", filename)
+                        .withAdditionalMetadata("status", status)
                         .build();
                 MarkdownDocumentReader markdownDocumentReader = new MarkdownDocumentReader(resource, config);
                 allDocuments.addAll(markdownDocumentReader.get());
