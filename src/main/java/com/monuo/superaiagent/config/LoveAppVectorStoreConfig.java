@@ -5,6 +5,7 @@ import com.monuo.superaiagent.rag.LoveAppDocumentLoader;
 
 import com.monuo.superaiagent.rag.MyKeywordEnricher;
 import com.monuo.superaiagent.rag.MyTokenTextSplitter;
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.embedding.EmbeddingModel;
@@ -30,8 +31,18 @@ public class LoveAppVectorStoreConfig {
     @Resource
     private MyTokenTextSplitter myTokenTextSplitter;
 
+    @Resource
+    private DashScopeEmbeddingModel dashscopeEmbeddingModel;
+
+    private VectorStore vectorStore;
+
     @Bean
-    VectorStore loveAppVectorStore(DashScopeEmbeddingModel dashscopeEmbeddingModel) {
+    VectorStore loveAppVectorStore() {
+        return vectorStore;
+    }
+
+    @PostConstruct
+    public void init() {
         SimpleVectorStore simpleVectorStore = SimpleVectorStore.builder(dashscopeEmbeddingModel)
                 .build();
         // 加载文档
@@ -41,7 +52,7 @@ public class LoveAppVectorStoreConfig {
         // 自动补充关键词元信息
         List<Document> enrichedDocuments = myKeywordEnricher.enrichDocuments(documents);
         simpleVectorStore.add(enrichedDocuments);
-        return simpleVectorStore;
+        this.vectorStore = simpleVectorStore;
     }
 
 }

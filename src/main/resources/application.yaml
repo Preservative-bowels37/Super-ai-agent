@@ -25,6 +25,18 @@ spring:
         model: qwen3:8b
         options:
           temperature: 0.7
+    rag:
+      github:
+        owner: alibaba
+        repo: spring-ai-alibaba
+        branch: main
+        token: ${GITHUB_TOKEN}
+      baidu-translate:
+        app-id: ${BAIDU_TRANSLATE_APP_ID}
+        app-key: ${BAIDU_TRANSLATE_APP_KEY}
+      translation:
+        from-lang: auto
+        to-lang: zh
 server:
   port: 8123
   servlet:
