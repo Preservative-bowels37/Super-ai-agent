@@ -134,6 +134,13 @@
             <version>5.8.40</version>
         </dependency>
 
+        <!-- Hutool 扩展包，包含邮件、验证码等功能 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-extra</artifactId>
+            <version>5.8.40</version>
+        </dependency>
+
         <!-- Knife4j API 文档增强工具，基于 Swagger/OpenAPI 的接口文档 UI -->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
@@ -176,7 +183,13 @@
             <version>1.19.1</version>
         </dependency>
 
-<!--        PDF 生成库-->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-mcp-client</artifactId>
+        </dependency>
+
+
+        <!--        PDF 生成库-->
         <!-- https://mvnrepository.com/artifact/com.itextpdf/itext-core -->
         <dependency>
             <groupId>com.itextpdf</groupId>
@@ -190,6 +203,13 @@
             <artifactId>font-asian</artifactId>
             <version>9.1.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+
 
 
         <dependency>

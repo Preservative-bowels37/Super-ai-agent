@@ -1,5 +1,6 @@
 package com.monuo.superaiagent.tools;
 
+import jakarta.annotation.Resource;
 import org.springframework.ai.support.ToolCallbacks;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,12 @@ public class ToolRegistration {
 
     @Value("${search-api.api-key}")
     private String searchApiKey;
+
+    @Resource
+    private QQEmailSenderTool qqEmailSenderTool;
+
+    @Resource
+    private MailSendTool mailSendTool;
 
     @Bean
     public ToolCallback[] allTools() {
@@ -26,7 +33,9 @@ public class ToolRegistration {
             webScrapingTool,
             resourceDownloadTool,
             terminalOperationTool,
-            pdfGenerationTool
+            pdfGenerationTool,
+//            qqEmailSenderTool,
+            mailSendTool
         );
     }
 }
