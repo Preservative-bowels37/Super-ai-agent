@@ -26,7 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * 恋爱大师向量数据库配置（懒加载 + 缓存版本）
  * 对比原版：启动时不立即加载，只有首次使用时才初始化，并支持缓存
  */
-//@Configuration
+@Configuration
 @Slf4j
 public class LoveAppStoreConfig {
 

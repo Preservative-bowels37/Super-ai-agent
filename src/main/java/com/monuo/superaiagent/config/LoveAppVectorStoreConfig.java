@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * 恋爱大师向量数据库配置（初始化基于内存的向量数据库的 Bean ）
  */
-@Configuration
+//@Configuration
 public class LoveAppVectorStoreConfig {
 
     @Resource

@@ -39,12 +39,12 @@ spring:
         to-lang: zh
     mcp:
       client:
-        sse:
-          connections:
-            server1:
-              url: http://localhost:8127
-#        stdio:
-#          servers-configuration: classpath:mcp-servers.json
+#        sse:
+#          connections:
+#            server1:
+#              url: http://localhost:8127
+        stdio:
+          servers-configuration: classpath:mcp-servers.json
 
 server:
   port: 8123
@@ -72,7 +72,7 @@ search-api:
   api-key: ${SEARCH_API_KEY}
 # QQ邮箱配置
 qq-email:
-  from: ${QQ_EMAIL_FROM}
+  from: ${QQ_EMAIL_FROM:}
   auth-code: ${QQ_EMAIL_AUTH_CODE}
   smtp-host: ${QQ_EMAIL_SMTP_HOST:smtp.qq.com}
   smtp-port: ${QQ_EMAIL_SMTP_PORT:587}

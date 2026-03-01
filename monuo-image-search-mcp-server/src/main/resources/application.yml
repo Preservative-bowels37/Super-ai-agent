@@ -2,6 +2,6 @@ spring:
   application:
     name: monuo-image-search-mcp-server
   profiles:
-    active: sse
+    active: see
 server:
   port: 8127
