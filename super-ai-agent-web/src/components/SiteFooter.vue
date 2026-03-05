@@ -54,6 +54,8 @@
           >Super AI Agent</a
         >
         <span class="divider">·</span>
+        <span class="version">v1.0.0</span>
+        <span class="divider">·</span>
         <span class="copyright-text">© {{ currentYear }}</span>
       </div>
     </div>
@@ -148,6 +150,11 @@ const currentYear = computed(() => new Date().getFullYear());
 .copyright-text {
   color: #a1a1aa;
   font-weight: 400;
+}
+
+.version {
+  color: #a78bfa;
+  font-weight: 500;
 }
 
 .heart {
