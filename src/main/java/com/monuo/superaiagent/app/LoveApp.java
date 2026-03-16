@@ -122,48 +122,68 @@ public class LoveApp {
                 .content();
     }
 
-    //方式一
-//    /**
-//     * 在系统提示词的【输出格式要求】部分后插入报告要求
-//     * @param originalPrompt 原始系统提示词
-//     * @return 增强后的系统提示词
-//     */
-//    private String insertReportRequirement(String originalPrompt) {
-//        String reportRequirement = SystemConstants.REPORT_REQUIREMENT;
-//
-//        int insertPosition = originalPrompt.indexOf("【输出格式要求】");
-//        if (insertPosition != -1) {
-//            return originalPrompt.substring(0, insertPosition)
-//                   + reportRequirement
-//                   + originalPrompt.substring(insertPosition);
-//        }
-//
-//        return originalPrompt + reportRequirement;
-//    }
-//
-//    /**
-//     * AI 恋爱报告功能（实战结构化输出）
-//     * AI会自动从用户消息中提取用户名
-//     *
-//     * @param message 用户消息
-//     * @param chatId 对话ID
-//     * @return 恋爱报告
-//     */
-//    public LoveReport doChatWithReport(String message, String chatId) {
-//        String enhancedSystemPrompt = insertReportRequirement(SystemConstants.SYSTEM_PROMPT);
-//
-//        LoveReport loveReport = chatClient
-//                .prompt()
-//                .system(enhancedSystemPrompt)
-//                .user(message)
-//                .advisors(spec -> spec.param(ChatMemory.CONVERSATION_ID, chatId))
-//                .call()
-//                .entity(LoveReport.class);
-//        log.info("loveReport: {}", loveReport);
-//        return loveReport;
-//    }
+    /**
+     * AI RAG对话（支持多轮对话记忆，SSE 流式传输）
+     *
+     * @param message
+     * @param chatId
+     * @return
+     */
+    public Flux<String> doChatByStreamWithRag(String message, String chatId) {
+        // 查询重写
+        String rewrittenMessage = queryRewriter.doQueryRewrite(message);
+        return chatClient
+                .prompt()
+                .user(rewrittenMessage)
+                .advisors(spec -> spec.param(ChatMemory.CONVERSATION_ID, chatId))
+                .advisors(QuestionAnswerAdvisor.builder(pgVectorVectorStore).build())
+                .stream()
+                .content();
+    }
 
-    record LoveReport(String title, List<String> suggestions) {
+    /**
+     * AI 智能对话（自动RAG回退 + SSE 流式传输）
+     * 推荐使用：提供最佳用户体验
+     *
+     * @param message
+     * @param chatId
+     * @return
+     */
+    public Flux<String> doChatByStreamSmart(String message, String chatId) {
+        try {
+            // 先判断问题类型
+            QuestionType type = questionClassifierService.classify(message);
+            log.info("问题分类结果: {}, 问题: {}", type, message);
+
+            if (type == QuestionType.SENSITIVE) {
+                return Flux.just("抱歉，我无法回答这个问题。");
+            }
+
+            // 查询重写
+            String rewrittenMessage = queryRewriter.doQueryRewrite(message);
+            
+            // 检查RAG相关性
+            List<Document> docs = pgVectorVectorStore.similaritySearch(
+                SearchRequest.builder().query(rewrittenMessage).topK(3).build()
+            );
+            
+            boolean hasRelevantDocs = docs.stream()
+                .anyMatch(doc -> doc.getScore() >= RAG_SIMILARITY_THRESHOLD);
+            
+            if (hasRelevantDocs) {
+                log.info("RAG检索到{}条相关文档，使用RAG流式回答", docs.size());
+                return doChatByStreamWithRag(message, chatId);
+            } else {
+                log.info("RAG检索无结果（相似度<{}），fallback到通用流式LLM", RAG_SIMILARITY_THRESHOLD);
+                return doChatByStream(message, chatId);
+            }
+        } catch (Exception e) {
+            log.error("智能流式对话异常，fallback到基础流式LLM", e);
+            return doChatByStream(message, chatId);
+        }
+    }
+
+    public record LoveReport(String title, List<String> suggestions) {
 
     }
 
@@ -239,7 +259,7 @@ public class LoveApp {
     private ToolCallback[] loveAppTools;
 
     /**
-     * AI 恋爱报告功能（支持调用工具）
+     * AI 功能（支持调用工具）
      *
      * @param message 用户消息
      * @param chatId  对话ID
@@ -268,7 +288,7 @@ public class LoveApp {
     private ToolCallbackProvider toolCallbackProvider;
 
     /**
-     * AI 恋爱报告功能（调用MCP服务）
+     * AI功能（调用MCP服务）
      *
      * @param message 用户消息
      * @param chatId  对话ID
@@ -289,8 +309,8 @@ public class LoveApp {
     /**
      * 问题分类服务
      */
-//    @Resource
-//    private QuestionClassifierService questionClassifierService;
+    @Resource
+    private QuestionClassifierService questionClassifierService;
 
     /**
      * RAG相似度阈值
@@ -302,34 +322,29 @@ public class LoveApp {
      * 核心策略：
      * 1. 先判断问题类型
      * 2. 敏感问题 → 拒绝回答
-     * 3. 通用问题 → 直接用通用LLM回答
-     * 4. 恋爱相关/未知 → 尝试RAG，失败则fallback到通用LLM
+     * 3. 恋爱相关/通用/未知 → 尝试RAG，相似度低则fallback到通用LLM
      *
      * @param message 用户消息
      * @param chatId  对话ID
      * @return AI回答
      */
-//    public String doChatWithRagFallback(String message, String chatId) {
-//        // 1. 先判断问题类型
-//        QuestionType type = questionClassifierService.classify(message);
-//        log.info("问题分类结果: {}, 问题: {}", type, message);
-//
-//        switch (type) {
-//            case SENSITIVE:
-//                return "抱歉，我无法回答这个问题。";
-//
-//            case GENERAL:
-//                // 通用问题，不走RAG，直接用通用知识回答
-//                log.info("通用问题，直接使用通用LLM回答");
-//                return doChat(message, chatId);
-//
-//            case LOVE_RELATED:
-//            case UNKNOWN:
-//            default:
-//                // 尝试RAG，失败则fallback到通用回答
-//                return doChatWithRagOrFallback(message, chatId);
-//        }
-//    }
+    public String doChatWithRagFallback(String message, String chatId) {
+        // 1. 先判断问题类型
+        QuestionType type = questionClassifierService.classify(message);
+        log.info("问题分类结果: {}, 问题: {}", type, message);
+
+        switch (type) {
+            case SENSITIVE:
+                return "抱歉，我无法回答这个问题。";
+
+            case LOVE_RELATED:
+            case GENERAL:
+            case UNKNOWN:
+            default:
+                // 恋爱相关/通用/未知问题，都尝试RAG，失败则fallback到通用回答
+                return doChatWithRagOrFallback(message, chatId);
+        }
+    }
 
     /**
      * RAG失败时fallback到通用LLM
@@ -338,35 +353,35 @@ public class LoveApp {
      * @param chatId  对话ID
      * @return AI回答
      */
-//    private String doChatWithRagOrFallback(String message, String chatId) {
-//        try {
-//            // 先尝试RAG
-//            String rewrittenMessage = queryRewriter.doQueryRewrite(message);
-//
-//            // 直接检索看是否有结果（不经过LLM生成）
-//            List<Document> docs = loveAppVectorStore.similaritySearch(
-//                    SearchRequest.builder().query(rewrittenMessage).topK(3).build()
-//            );
-//
-//            // 检查是否有相关文档（相似度>0.6）
-//            boolean hasRelevantDocs = docs.stream()
-//                    .anyMatch(doc -> doc.getScore() >= RAG_SIMILARITY_THRESHOLD);
-//
-//            if (!hasRelevantDocs) {
-//                // RAG无结果，fallback到通用LLM
-//                log.info("RAG检索无结果（相似度<{}），fallback到通用LLM", RAG_SIMILARITY_THRESHOLD);
-//                return doChat(message, chatId);
-//            }
-//
-//            // 有结果，使用RAG回答
-//            log.info("RAG检索到{}条相关文档，使用RAG回答", docs.size());
-//            return doChatWithRag(message, chatId);
-//
-//        } catch (Exception e) {
-//            log.error("RAG调用异常，fallback到通用LLM", e);
-//            return doChat(message, chatId);
-//        }
-//    }
+    private String doChatWithRagOrFallback(String message, String chatId) {
+        try {
+            // 先尝试RAG
+            String rewrittenMessage = queryRewriter.doQueryRewrite(message);
+
+            // 直接检索看是否有结果（不经过LLM生成）- 使用 pgVectorVectorStore
+            List<Document> docs = pgVectorVectorStore.similaritySearch(
+                    SearchRequest.builder().query(rewrittenMessage).topK(3).build()
+            );
+
+            // 检查是否有相关文档（相似度>0.6）
+            boolean hasRelevantDocs = docs.stream()
+                    .anyMatch(doc -> doc.getScore() >= RAG_SIMILARITY_THRESHOLD);
+
+            if (!hasRelevantDocs) {
+                // RAG无结果，fallback到通用LLM
+                log.info("RAG检索无结果（相似度<{}），fallback到通用LLM", RAG_SIMILARITY_THRESHOLD);
+                return doChat(message, chatId);
+            }
+
+            // 有结果，使用RAG回答
+            log.info("RAG检索到{}条相关文档，使用RAG回答", docs.size());
+            return doChatWithRag(message, chatId);
+
+        } catch (Exception e) {
+            log.error("RAG调用异常，fallback到通用LLM", e);
+            return doChat(message, chatId);
+        }
+    }
 
 
 }
