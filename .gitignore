@@ -34,3 +34,9 @@ build/
 
 ### Local config (contains sensitive info) ###
 src/main/resources/application-local.yaml
+
+### Markdown docs (except document folder) ###
+*.md
+docs/*.md
+monuo-image-search-mcp-server/*.md
+!src/main/resources/document/*.md
