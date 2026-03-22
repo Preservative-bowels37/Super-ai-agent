@@ -6,6 +6,9 @@ spring:
   #  main:
   #    allow-bean-definition-overriding: true
   ai:
+    retry:
+      max-attempts: 1 # 禁用重试，避免内容审核错误重复触发
+      on-client-errors: false # 客户端错误（4xx）不重试
     ollama:
       base-url: http://localhost:11434
       chat:
@@ -26,18 +29,18 @@ spring:
         to-lang: zh
     mcp:
       client:
-#        sse:
-#          connections:
-#            server1:
-#              url: http://localhost:8127
+        #        sse:
+        #          connections:
+        #            server1:
+        #              url: http://localhost:8127
         stdio:
           servers-configuration: classpath:mcp-servers.json
 
 # PostgreSQL 向量数据库配置
 pgvector:
   datasource:
-    url: jdbc:postgresql://rm-cn-g4t4n6auf000118o.rwlb.rds.aliyuncs.com:5432/Super_ai_agent
-    username: my_root
+    url: jdbc:postgresql://localhost:5432/Super_ai_agent
+    username: ${PGVECTOR_USERNAME:postgres}
     password: ${PGVECTOR_PASSWORD}
   ai:
     vectorstore:
@@ -61,8 +64,8 @@ springdoc:
   api-docs:
     path: /v3/api-docs
   group-configs:
-    - group: 'default'
-      paths-to-match: '/**'
+    - group: "default"
+      paths-to-match: "/**"
       packages-to-scan: com.monuo.superaiagent.controller
 # knife4j的增强配置，不需要增强可以不配
 knife4j:

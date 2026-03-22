@@ -4,7 +4,8 @@ import com.monuo.superaiagent.converter.MessageConverter;
 import com.monuo.superaiagent.entity.ChatMessage;
 import com.monuo.superaiagent.repository.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.stereotype.Component;
@@ -13,9 +14,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@Slf4j
 @RequiredArgsConstructor// 构造函数注入
 public class DatabaseBasedChatMemory implements ChatMemory {
+
+    private static final Logger log = LoggerFactory.getLogger(DatabaseBasedChatMemory.class);
 
     private final ChatMessageRepository chatMessageRepository;
 
@@ -26,41 +28,20 @@ public class DatabaseBasedChatMemory implements ChatMemory {
             return;
         }
 
-        // 获取数据库中已有的消息
-        List<ChatMessage> existingMessages = chatMessageRepository.listByConversationId(conversationId);
-        
-        // 构建已存在消息的指纹集合（用于去重）
-        // 指纹格式：messageType + "|" + content的前100个字符
-        java.util.Set<String> existingFingerprints = existingMessages.stream()
-                .map(msg -> {
-                    String contentPrefix = msg.getContent() != null && msg.getContent().length() > 100 
-                            ? msg.getContent().substring(0, 100) 
-                            : msg.getContent();
-                    return msg.getMessageType() + "|" + contentPrefix;
-                })
-                .collect(Collectors.toSet());
-
-        // 过滤出真正需要保存的新消息
+        // 直接转换并保存所有消息，不进行内容去重
+        // 用户可能真的想发送相同的内容，这是正常的对话行为
         List<ChatMessage> newChatMessages = messages.stream()
                 .map(message -> MessageConverter.toChatMessage(message, conversationId))
-                .filter(chatMsg -> {
-                    String contentPrefix = chatMsg.getContent() != null && chatMsg.getContent().length() > 100 
-                            ? chatMsg.getContent().substring(0, 100) 
-                            : chatMsg.getContent();
-                    String fingerprint = chatMsg.getMessageType() + "|" + contentPrefix;
-                    return !existingFingerprints.contains(fingerprint);
-                })
                 .collect(Collectors.toList());
 
         if (newChatMessages.isEmpty()) {
-            log.debug("No new messages to save for conversation {} (all messages already exist)", conversationId);
+            log.debug("No messages to convert for conversation {}", conversationId);
             return;
         }
 
         // 批量保存新消息
         chatMessageRepository.saveBatch(newChatMessages, newChatMessages.size());
-        log.debug("Saved {} new messages for conversation {} (filtered from {} total messages)", 
-                newChatMessages.size(), conversationId, messages.size());
+        log.debug("Saved {} messages for conversation {}", newChatMessages.size(), conversationId);
     }
 
     @Override

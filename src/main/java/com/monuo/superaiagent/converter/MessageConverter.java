@@ -12,11 +12,27 @@ public class MessageConverter {
 
     // Message -> ChatMessage
     public static ChatMessage toChatMessage(Message message, String conversationId) {
+        String content = getMessageText(message);
+        Map<String, Object> metadata = message.getMetadata();
+        
+        // 【关键修复】如果 metadata 包含 thinkingSteps 且 content 包含【思考】标记
+        // 说明这是工具调用阶段的消息，需要清空 content 或提取【回复】之后的内容
+        if (metadata != null && metadata.containsKey("thinkingSteps") && content != null && content.contains("【思考】")) {
+            int replyStart = content.indexOf("【回复】");
+            if (replyStart != -1) {
+                // 有【回复】标记，只保留【回复】之后的内容
+                content = content.substring(replyStart + 4).trim();
+            } else {
+                // 只有【思考】没有【回复】，清空 content
+                content = "";
+            }
+        }
+        
         return ChatMessage.builder()
                 .conversationId(conversationId)
                 .messageType(convertMessageType(message))
-                .content(getMessageText(message))
-                .metadata(message.getMetadata())
+                .content(content)
+                .metadata(metadata)
                 .build();
     }
 
@@ -28,7 +44,7 @@ public class MessageConverter {
         
         return switch (messageType) {
             case USER -> new UserMessage(text);
-            case ASSISTANT -> new AssistantMessage(text);
+            case ASSISTANT -> new AssistantMessage(text, metadata != null ? metadata : new java.util.HashMap<>());
             case SYSTEM -> new SystemMessage(text);
             case TOOL -> new UserMessage(text);
         };

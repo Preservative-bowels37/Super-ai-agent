@@ -13,6 +13,7 @@ import org.springframework.ai.tool.annotation.ToolParam;
 
 import java.io.IOException;
 
+//
 public class PDFGenerationTool {
 
     @Tool(description = "Generate a PDF file with given content", returnDirect = false)

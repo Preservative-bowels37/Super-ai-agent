@@ -38,8 +38,9 @@ public class LoveAppToolRegistration {
                 new TavilyWebSearchTool(tavilySearchApiKey),
                 new MailSendTool(),
                 new DateLocationTool(),
-                new FileOperationTool() // 添加文件操作工具，支持读取用户上传的文本
-//                new RomanceImageSearchTool()
+                new PDFGenerationTool(),
+                new FileOperationTool(), // 添加文件操作工具，支持读取用户上传的文本
+                new RomanceImageSearchTool()
         );
 
         // MCP 工具（高德地图 15 个工具、图片搜索等）

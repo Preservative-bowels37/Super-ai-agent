@@ -7,20 +7,7 @@
         "@amap/amap-maps-mcp-server"
       ],
       "env": {
-        "AMAP_MAPS_API_KEY": "22a514725b37aefa047280be42120b51"
-      }
-    },
-    "monuo-image-search-mcp-server": {
-      "command": "java",
-      "args": [
-        "-Dspring.ai.mcp.server.stdio=true",
-        "-Dspring.main.web-application-type=none",
-        "-Dlogging.pattern.console=",
-        "-jar",
-        "monuo-image-search-mcp-server/target/monuo-image-search-mcp-server-0.0.1-SNAPSHOT.jar"
-      ],
-      "env": {
-        "PEXELS_API_KEY": "你的 Pexels API Key"
+        "AMAP_MAPS_API_KEY": "你的API KEY"
       }
     }
   }

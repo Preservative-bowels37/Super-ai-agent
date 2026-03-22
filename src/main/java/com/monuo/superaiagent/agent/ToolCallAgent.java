@@ -127,10 +127,11 @@ public class ToolCallAgent extends ReActAgent {
         // 调用工具
         Prompt prompt = new Prompt(getMessageList(), chatOptions);
         ToolExecutionResult toolExecutionResult = toolCallingManager.executeToolCalls(prompt, toolCallChatResponse);
-        // 记录消息上下文，conversationHistory 已经包含了助手消息和工具调用返回的结果
-        setMessageList(toolExecutionResult.conversationHistory());
-        // 当前工具调用的结果
+        // 只添加工具响应消息到消息列表（不要覆盖整个列表，因为助手消息已经在 think() 中添加了）
+        // conversationHistory 包含：原有消息 + 助手消息 (tool_calls) + 工具响应消息 (tool_responses)
+        // 我们只需要添加最后一个工具响应消息
         ToolResponseMessage toolResponseMessage = (ToolResponseMessage) CollUtil.getLast(toolExecutionResult.conversationHistory());
+        getMessageList().add(toolResponseMessage);
         // 判断是否调用了终止工具
         boolean terminateToolCalled = toolResponseMessage.getResponses().stream()
                 .anyMatch(response -> response.name().equals("doTerminate"));

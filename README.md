@@ -1,0 +1,510 @@
+# Super AI Agent - 智能对话助手平台
+
+<div align="center">
+
+![Java](https://img.shields.io/badge/Java-21-orange)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.9-brightgreen)
+![Spring AI](https://img.shields.io/badge/Spring%20AI-1.0.0-blue)
+![Vue](https://img.shields.io/badge/Vue-3.4.0-green)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+
+基于 Spring AI 的智能对话 Web 应用，提供 AI 恋爱大师与超级智能体服务
+
+[功能特性](#功能特性) • [技术架构](#技术架构) • [快速开始](#快速开始) • [部署指南](#部署指南)
+
+</div>
+
+---
+
+## 📖 项目简介
+
+Super AI Agent 是一个功能完整的 AI 智能对话平台，包含两个核心应用：
+
+1. **AI 恋爱大师**：专业的情感咨询助手，提供恋爱建议、关系分析和情感报告
+2. **AI 超级智能体（Manus）**：具备深度思考能力的全能 AI 助手，支持工具调用和多模态交互
+
+### 🎯 项目亮点
+
+- ✅ **深度思考模式**：参考 DeepSeek，实现简单/复杂问题智能分类和选择性思考
+- ✅ **完整的 ReAct 架构**：Think（思考）→ Act（行动）→ Observe（观察）循环
+- ✅ **RAG 知识增强**：向量存储、查询转换、多查询扩展、智能降级策略
+- ✅ **丰富的工具生态**：14+ 自定义工具 + MCP 协议集成（高德地图 15 个工具）
+- ✅ **Gemini 风格 UI**：优雅的思考过程展示、流式输出、智能滚动
+- ✅ **防死循环检测**：4 种检测方式 + 3 级干预机制
+- ✅ **数据库持久化**：MySQL 对话历史 + PostgreSQL PGVector 向量存储
+
+---
+
+## ✨ 功能特性
+
+### AI 恋爱大师
+
+- 💬 **智能对话**：三种对话模式（基础/智能/RAG）
+- 📊 **恋爱报告**：自动生成结构化的情感分析报告
+- 📥 **报告下载**：支持下载和复制报告内容
+- 🎯 **RAG 知识库**：基于恋爱知识库的专业回答
+- 🔄 **智能降级**：RAG 失败时自动切换到普通对话
+
+### AI 超级智能体（Manus）
+
+- 🧠 **深度思考**：展示完整的思考过程（可折叠）
+- 🔧 **工具调用**：支持 14+ 工具（搜索、文件、邮件、PDF 生成等）
+- 🌐 **MCP 集成**：高德地图 15 个工具（POI 搜索、路径规划等）
+- 💭 **思考可视化**：Gemini 风格的思考过程展示
+- ⚡ **流式输出**：实时显示 AI 回复和思考步骤
+- 🎨 **智能分类**：自动判断简单/复杂问题，选择性思考
+
+### 核心能力
+
+| 功能           | 说明                                    |
+| -------------- | --------------------------------------- |
+| **问题分类**   | 基于关键词快速判断问题类型（简单/复杂） |
+| **选择性思考** | 简单问题直接回答，复杂问题深度思考      |
+| **工具调用**   | 自动选择和调用合适的工具                |
+| **防死循环**   | 语义重复、工具重复、连续失败检测        |
+| **执行监控**   | 超时控制、执行状态追踪                  |
+| **对话记忆**   | 多种存储方式（内存/文件/数据库）        |
+| **RAG 检索**   | 向量存储、查询转换、多查询扩展          |
+
+---
+
+## 🏗️ 技术架构
+
+### 后端技术栈
+
+| 技术              | 版本        | 说明                   |
+| ----------------- | ----------- | ---------------------- |
+| Java              | 21          | 编程语言               |
+| Spring Boot       | 3.5.9       | 应用框架               |
+| Spring AI         | 1.0.0       | AI 集成框架            |
+| Spring AI Alibaba | 1.0.0.2     | 阿里云 AI 集成         |
+| MyBatis-Plus      | 3.5.12      | ORM 框架               |
+| MySQL             | 8.0+        | 对话历史存储           |
+| PostgreSQL        | 14+         | 向量数据库（PGVector） |
+| LangChain4j       | 1.0.0-beta2 | AI 编排框架            |
+
+### 前端技术栈
+
+| 技术       | 版本  | 说明        |
+| ---------- | ----- | ----------- |
+| Vue        | 3.4.0 | 前端框架    |
+| Vue Router | 4.2.0 | 路由管理    |
+| Axios      | 1.6.0 | HTTP 客户端 |
+| Vite       | 5.0.0 | 构建工具    |
+
+### AI 能力
+
+| 能力     | 提供商           | 说明                |
+| -------- | ---------------- | ------------------- |
+| 对话模型 | 阿里云通义千问   | qwen-max、qwen-plus |
+| 嵌入模型 | 阿里云 DashScope | text-embedding-v2   |
+| 本地模型 | Ollama           | 可选的本地部署方案  |
+| 向量存储 | PGVector         | PostgreSQL 向量扩展 |
+| MCP 工具 | 高德地图         | 15 个地图相关工具   |
+
+### 架构设计
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                      前端层 (Vue 3)                      │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
+│  │  恋爱大师     │  │  超级智能体   │  │   首页       │  │
+│  └──────────────┘  └──────────────┘  └──────────────┘  │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            │ HTTP/SSE
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│                   控制器层 (Spring MVC)                  │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
+│  │ LoveApp      │  │ Manus        │  │ ChatHistory  │  │
+│  │ Controller   │  │ Controller   │  │ Controller   │  │
+│  └──────────────┘  └──────────────┘  └──────────────┘  │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│                    智能体层 (Agent)                      │
+│  ┌──────────────────────────────────────────────────┐  │
+│  │              MonuoManus (超级智能体)              │  │
+│  │  ┌────────────┐  ┌────────────┐  ┌────────────┐ │  │
+│  │  │ Thinking   │  │ ToolCall   │  │ Database   │ │  │
+│  │  │ Agent      │  │ Agent      │  │ Memory     │ │  │
+│  │  └────────────┘  └────────────┘  └────────────┘ │  │
+│  └──────────────────────────────────────────────────┘  │
+│  ┌──────────────────────────────────────────────────┐  │
+│  │                LoveApp (恋爱大师)                 │  │
+│  │  ┌────────────┐  ┌────────────┐  ┌────────────┐ │  │
+│  │  │ RAG        │  │ Fallback   │  │ Report     │ │  │
+│  │  │ Advisor    │  │ Strategy   │  │ Generator  │ │  │
+│  │  └────────────┘  └────────────┘  └────────────┘ │  │
+│  └──────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│                   工具层 (Tools)                         │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │
+│  │ Web      │ │ File     │ │ Mail     │ │ PDF      │  │
+│  │ Search   │ │ Operation│ │ Send     │ │ Generate │  │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘  │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │
+│  │ Terminal │ │ Download │ │ Scraping │ │ Document │  │
+│  │ Operation│ │ Resource │ │ Web      │ │ Reader   │  │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘  │
+│  ┌──────────────────────────────────────────────────┐  │
+│  │         MCP Tools (高德地图 15 个工具)            │  │
+│  └──────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│                   数据层 (Data)                          │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
+│  │ MySQL        │  │ PostgreSQL   │  │ File System  │  │
+│  │ (对话历史)    │  │ (向量存储)    │  │ (文档/缓存)   │  │
+│  └──────────────┘  └──────────────┘  └──────────────┘  │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🚀 快速开始
+
+### 前置要求
+
+- Java 21+
+- Node.js 18+
+- Maven 3.8+
+- MySQL 8.0+
+- PostgreSQL 14+ (带 PGVector 扩展)
+- 阿里云 DashScope API Key
+
+### 1. 克隆项目
+
+```bash
+git clone https://github.com/your-username/Super-ai-agent.git
+cd Super-ai-agent
+```
+
+### 2. 配置数据库
+
+#### MySQL 配置
+
+```sql
+-- 创建数据库
+CREATE DATABASE super_ai_agent CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- 创建对话历史表
+USE super_ai_agent;
+
+CREATE TABLE chat_message (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    chat_id VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_chat_id (chat_id),
+    INDEX idx_created_at (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+#### PostgreSQL + PGVector 配置
+
+```sql
+-- 创建数据库
+CREATE DATABASE vector_store;
+
+-- 连接到数据库
+\c vector_store
+
+-- 安装 PGVector 扩展
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- 创建向量表（Spring AI 会自动创建，这里仅供参考）
+CREATE TABLE IF NOT EXISTS vector_store (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    content TEXT,
+    metadata JSONB,
+    embedding vector(1536)
+);
+
+-- 创建索引
+CREATE INDEX ON vector_store USING ivfflat (embedding vector_cosine_ops);
+```
+
+### 3. 配置环境变量
+
+复制环境变量模板文件：
+
+```bash
+cp .env.example .env
+```
+
+编辑 `.env` 文件，填入你的真实配置：
+
+```bash
+# 必需配置
+DASHSCOPE_API_KEY=your_dashscope_api_key_here
+TAVILY_SEARCH_API_KEY=your_tavily_api_key_here
+
+# 数据库配置
+POSTGRES_PASSWORD=your_postgres_password_here
+PGVECTOR_PASSWORD=your_pgvector_password_here
+
+# 可选配置
+QQ_EMAIL_FROM=your_qq_email@qq.com
+QQ_EMAIL_AUTH_CODE=your_qq_email_auth_code_here
+```
+
+### 4. 配置后端
+
+编辑 `src/main/resources/application.yml`：
+
+```yaml
+spring:
+  # 数据源配置
+  datasource:
+    # MySQL 配置
+    url: jdbc:mysql://localhost:3306/super_ai_agent?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: your_mysql_username
+    password: your_mysql_password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # AI 配置
+  ai:
+    dashscope:
+      api-key: ${DASHSCOPE_API_KEY} # 阿里云 API Key
+      chat:
+        options:
+          model: qwen-max
+          temperature: 0.7
+      embedding:
+        options:
+          model: text-embedding-v2
+
+# PGVector 配置
+pgvector:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/vector_store
+    username: your_postgres_username
+    password: your_postgres_password
+```
+
+### 4. 启动后端
+
+```bash
+# 方式一：使用 Maven
+cd Super-ai-agent
+mvn clean install
+mvn spring-boot:run
+
+# 方式二：使用 IDE
+# 直接运行 SuperAiAgentApplication.java
+```
+
+后端服务将在 `http://localhost:8080` 启动
+
+### 5. 启动前端
+
+```bash
+cd super-ai-agent-web
+npm install
+npm run dev
+```
+
+前端服务将在 `http://localhost:5173` 启动
+
+### 6. 访问应用
+
+打开浏览器访问：`http://localhost:5173`
+
+---
+
+## 📦 部署指南
+
+详细的部署文档请查看：[部署指南](docs/DEPLOYMENT.md)
+
+### Docker 部署（推荐）
+
+```bash
+# 构建镜像
+docker-compose build
+
+# 启动服务
+docker-compose up -d
+
+# 查看日志
+docker-compose logs -f
+```
+
+### 生产环境部署
+
+1. **后端打包**
+
+```bash
+cd Super-ai-agent
+mvn clean package -DskipTests
+```
+
+生成的 JAR 文件位于 `target/Super-ai-agent-0.0.1-SNAPSHOT.jar`
+
+2. **前端打包**
+
+```bash
+cd super-ai-agent-web
+npm run build
+```
+
+生成的静态文件位于 `dist/` 目录
+
+3. **部署到服务器**
+
+```bash
+# 后端
+java -jar Super-ai-agent-0.0.1-SNAPSHOT.jar
+
+# 前端（使用 Nginx）
+# 将 dist/ 目录内容复制到 Nginx 的 html 目录
+```
+
+---
+
+## 🛠️ 开发指南
+
+### 项目结构
+
+```
+Super-ai-agent/
+├── src/main/java/com/monuo/superaiagent/
+│   ├── agent/              # 智能体核心
+│   │   ├── BaseAgent.java
+│   │   ├── ThinkingAgent.java
+│   │   ├── ToolCallAgent.java
+│   │   └── MonuoManus.java
+│   ├── app/                # 应用层
+│   │   └── LoveApp.java
+│   ├── tools/              # 工具集
+│   ├── rag/                # RAG 相关
+│   ├── controller/         # 控制器
+│   ├── service/            # 服务层
+│   └── config/             # 配置
+├── super-ai-agent-web/     # 前端项目
+│   ├── src/
+│   │   ├── views/          # 页面
+│   │   ├── components/     # 组件
+│   │   ├── api/            # API 接口
+│   │   └── router/         # 路由
+│   └── package.json
+├── docs/                   # 文档
+└── docker-compose.yaml     # Docker 配置
+```
+
+### 添加新工具
+
+1. 创建工具类：
+
+```java
+@Component
+public class MyTool {
+
+    @Tool(description = "工具描述")
+    public String myFunction(
+        @ToolParam(description = "参数描述") String param) {
+        // 工具逻辑
+        return "结果";
+    }
+}
+```
+
+2. 注册工具：
+
+```java
+@Configuration
+public class ToolRegistration {
+
+    @Bean
+    public List<ToolCallback> myTools(MyTool myTool) {
+        return ToolCallback.from(myTool);
+    }
+}
+```
+
+### 添加新的 RAG 文档
+
+将 Markdown 文档放入 `src/main/resources/rag/love_knowledge/` 目录，系统会自动加载。
+
+---
+
+## 🎯 使用示例
+
+### AI 恋爱大师
+
+```
+用户：我和女朋友在一起3年了，最近感觉她对我有点冷淡，该怎么办？
+
+AI：[智能模式 + 恋爱报告]
+1. 先进行详细的对话分析
+2. 自动生成恋爱关系分析报告
+3. 提供 3-5 条具体可行的建议
+4. 支持下载和复制报告
+```
+
+### AI 超级智能体
+
+```
+用户：帮我搜索今天的 AI 新闻
+
+AI：[展示思考过程]
+💭 思考中...
+├─ 问题类型：复杂问题
+├─ 用户想了解今日 AI 新闻
+├─ 需要使用 webSearch 工具
+└─ 思考时间：1.2s
+
+[调用工具：webSearch]
+[返回搜索结果...]
+```
+
+---
+
+## 🤝 贡献指南
+
+欢迎提交 Issue 和 Pull Request！
+
+1. Fork 本仓库
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 提交 Pull Request
+
+---
+
+## 📄 许可证
+
+本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
+
+---
+
+## 🙏 致谢
+
+- [Spring AI](https://spring.io/projects/spring-ai) - AI 集成框架
+- [阿里云百练](https://www.aliyun.com/product/bailian) - AI 模型服务
+- [LangChain4j](https://github.com/langchain4j/langchain4j) - AI 编排框架
+- [PGVector](https://github.com/pgvector/pgvector) - PostgreSQL 向量扩展
+
+---
+
+## 📞 联系方式
+
+- 项目地址：[(https://gitee.com/monks-offering/Super-ai-agent)](<(https://gitee.com/monks-offering/Super-ai-agent)>)
+- 问题反馈：[Issues](https://gitee.com/monks-offering/Super-ai-agent/issues)
+
+---
+
+<div align="center">
+**如果这个项目对你有帮助，请给一个 ⭐ Star！**
+
+Made with ❤️ by [Monuo]
+
+</div>

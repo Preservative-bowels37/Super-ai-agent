@@ -36,21 +36,72 @@ public class TavilyWebSearchTool {
         this.maxResults = maxResults;
     }
 
-    @Tool(description = "Search for information from Tavily AI Search Engine. Use this when you need to find current information, news, or facts from the internet.")
+    @Tool(description = """
+            Search the web for current information, news, or facts using Tavily AI Search Engine.
+            This tool is optimized for AI agents and returns clean, relevant results.
+            
+            Use this tool when you need to:
+            - Find current information or recent news
+            - Look up facts or data from the internet
+            - Get up-to-date information on any topic
+            
+            The tool automatically returns the most relevant results (up to 5).
+            """)
     public String searchWeb(
-            @ToolParam(description = "Search query keyword, be specific and clear") String query) {
+            @ToolParam(description = "Search query - be specific and clear about what you're looking for") String query) {
         return executeSearch(query, "basic", null, this.maxResults);
     }
 
     /**
      * 高级搜索：支持更多参数定制
+     * 注意：这个方法不应该被 LLM 直接调用，仅供内部使用或特殊场景
      */
-    @Tool(description = "Advanced search with custom parameters for Tavily AI Search Engine")
+    @Tool(description = """
+            Advanced web search - USE ONLY when user explicitly requests specific parameters.
+            For most searches, use searchWeb instead.
+            
+            Use this ONLY when user asks for:
+            - Recent news with specific time range (e.g., "news from this week")
+            - Specific number of results (e.g., "give me 10 results")
+            - Deep/comprehensive search
+            
+            Parameters:
+            - query: Search keywords (required)
+            - searchDepth: "basic" for quick results, "advanced" for comprehensive (optional)
+            - timeRange: "day", "week", "month", or "year" for recent results (optional)
+            - maxResults: Number of results between 1-10 (optional)
+            
+            Examples:
+            - "Search AI news from this week" → timeRange="week"
+            - "Search AI, give me 10 results" → maxResults=10
+            - "Deep search about quantum computing" → searchDepth="advanced"
+            """)
     public String searchWebAdvanced(
-            @ToolParam(description = "Search query keyword") String query,
-            @ToolParam(description = "Search depth: basic or advanced", required = false) String searchDepth,
-            @ToolParam(description = "Time range: day, week, month, year", required = false) String timeRange,
-            @ToolParam(description = "Max results (1-10)", required = false) Integer maxResults) {
+            @ToolParam(description = "Search query - what to search for") String query,
+            @ToolParam(description = "Search depth: 'basic' or 'advanced'. Use 'basic' for most searches.", required = false) String searchDepth,
+            @ToolParam(description = "Time range: 'day', 'week', 'month', or 'year'. Only use when user asks for recent results.", required = false) String timeRange,
+            @ToolParam(description = "Number of results (1-10). Only use when user specifies a number.", required = false) Integer maxResults) {
+
+        // 参数验证和默认值处理
+        if (searchDepth != null && !searchDepth.equals("basic") && !searchDepth.equals("advanced")) {
+            log.warn("Invalid searchDepth: {}, using 'basic'", searchDepth);
+            searchDepth = "basic";
+        }
+        
+        if (timeRange != null) {
+            String[] validRanges = {"day", "week", "month", "year"};
+            boolean valid = false;
+            for (String range : validRanges) {
+                if (range.equals(timeRange)) {
+                    valid = true;
+                    break;
+                }
+            }
+            if (!valid) {
+                log.warn("Invalid timeRange: {}, ignoring", timeRange);
+                timeRange = null;
+            }
+        }
 
         // 校验 maxResults 范围
         if (maxResults != null) {
@@ -70,28 +121,41 @@ public class TavilyWebSearchTool {
      * 执行搜索的公共方法
      */
     private String executeSearch(String query, String searchDepth, String timeRange, Integer maxResults) {
-        log.debug("Tavily search query: {}, depth: {}, timeRange: {}, maxResults: {}",
-                query, searchDepth, timeRange, maxResults);
+        // 参数验证
+        if (query == null || query.trim().isEmpty()) {
+            log.error("Search query is empty");
+            return "搜索失败：查询关键词不能为空";
+        }
+        
+        // 设置默认值
+        String finalSearchDepth = (searchDepth != null && !searchDepth.isEmpty()) ? searchDepth : "basic";
+        Integer finalMaxResults = (maxResults != null && maxResults > 0) ? maxResults : this.maxResults;
+        
+        log.info("Tavily search - query: {}, depth: {}, timeRange: {}, maxResults: {}",
+                query, finalSearchDepth, timeRange, finalMaxResults);
 
         // 构建请求参数
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("api_key", apiKey);
         paramMap.put("query", query);
-        paramMap.put("search_depth", "basic");        // basic 或 advanced
-        paramMap.put("max_results", maxResults);
-        paramMap.put("include_answer", true);         // 让 Tavily 返回 AI 生成的摘要
-        paramMap.put("include_raw_content", false);   // 不需要原始 HTML，节省额度
-//        paramMap.put("include_domains", new String[]{}); // 可指定域名白名单
-//        paramMap.put("exclude_domains", new String[]{}); // 可指定域名黑名单
+        paramMap.put("search_depth", finalSearchDepth);
+        paramMap.put("max_results", finalMaxResults);
+        paramMap.put("include_answer", true);
+        paramMap.put("include_raw_content", false);
 
-        if (timeRange != null) {
+        if (timeRange != null && !timeRange.isEmpty()) {
             paramMap.put("time_range", timeRange);
         }
 
         try {
-            // POST 请求（Tavily 要求 POST）
-            String response = HttpUtil.post(TAVILY_API_URL, JSONUtil.toJsonStr(paramMap));
-            log.debug("Tavily API response: {}", response);
+            // POST 请求，设置15秒超时
+            String response = HttpUtil.createPost(TAVILY_API_URL)
+                    .body(JSONUtil.toJsonStr(paramMap))
+                    .timeout(15000)
+                    .execute()
+                    .body();
+            
+            log.debug("Tavily API response received");
 
             JSONObject jsonObject = JSONUtil.parseObj(response);
 
@@ -99,30 +163,36 @@ public class TavilyWebSearchTool {
             if (jsonObject.containsKey("detail")) {
                 String error = jsonObject.getStr("detail");
                 log.error("Tavily API error: {}", error);
-                return "Search error: " + error;
+                return "搜索错误: " + error;
             }
 
-            // 优先返回 AI 生成的答案（如果有）
+            // 优先返回 AI 生成的答案
             String answer = jsonObject.getStr("answer");
             if (answer != null && !answer.trim().isEmpty()) {
                 log.info("Tavily search completed with AI answer");
-                return "AI Summary:\n" + answer + "\n\n---\n\nSearch Results:\n" +
+                return "AI 摘要:\n" + answer + "\n\n---\n\n搜索结果:\n" +
                         formatResults(jsonObject.getJSONArray("results"));
             }
 
-            // 否则返回搜索结果列表
+            // 返回搜索结果列表
             JSONArray results = jsonObject.getJSONArray("results");
             if (results == null || results.isEmpty()) {
                 log.info("Tavily search completed with no results");
-                return "No search results found.";
+                return "未找到搜索结果。";
             }
 
             log.info("Tavily search completed with {} results", results.size());
             return formatResults(results);
 
+        } catch (cn.hutool.http.HttpException e) {
+            log.error("Tavily HTTP request failed for query: {}", query, e);
+            if (e.getMessage() != null && e.getMessage().contains("timeout")) {
+                return "搜索超时（15秒），请稍后重试或使用更具体的搜索关键词。";
+            }
+            return "搜索请求失败: " + e.getMessage();
         } catch (Exception e) {
             log.error("Tavily search failed for query: {}", query, e);
-            return "Error searching Tavily: " + e.getMessage();
+            return "搜索时发生错误: " + e.getMessage();
         }
     }
 

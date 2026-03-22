@@ -14,7 +14,7 @@ import java.util.Date;
 public class ConversationVO {
 
     /**
-     * 会话ID
+     * 会话 ID
      */
     private String conversationId;
 

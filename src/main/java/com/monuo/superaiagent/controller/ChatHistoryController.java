@@ -49,24 +49,30 @@ public class ChatHistoryController {
         List<ChatMessage> messages = chatMessageRepository.listByConversationId(chatId);
         return messages.stream()
                 .map(msg -> {
+                    // 确保 role 字段正确：user / assistant / system / tool
+                    String role = "user"; // 默认值
+                    if (msg.getMessageType() != null) {
+                        role = msg.getMessageType().name().toLowerCase();
+                    }
+
                     MessageVO.MessageVOBuilder builder = MessageVO.builder()
-                            .role(msg.getMessageType() != null ? msg.getMessageType().name().toLowerCase() : "user")
+                            .role(role)
                             .content(msg.getContent())
                             .createTime(msg.getCreateTime());
-                    
+
                     // 从 metadata 中提取思考步骤和思考时间
                     if (msg.getMetadata() != null) {
                         Object thinkingSteps = msg.getMetadata().get("thinkingSteps");
                         if (thinkingSteps instanceof List) {
                             builder.thinkingSteps((List<String>) thinkingSteps);
                         }
-                        
+
                         Object thinkingTime = msg.getMetadata().get("thinkingTime");
                         if (thinkingTime instanceof Number) {
                             builder.thinkingTime(((Number) thinkingTime).intValue());
                         }
                     }
-                    
+
                     return builder.build();
                 })
                 .collect(Collectors.toList());

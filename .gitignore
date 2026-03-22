@@ -1,25 +1,48 @@
-HELP.md
+# ============================================
+# Java & Maven
+# ============================================
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
 
-### STS ###
+# ============================================
+# Eclipse IDE
+# ============================================
 .apt_generated
 .classpath
 .factorypath
 .project
-.settings
+.settings/
 .springBeans
 .sts4-cache
+bin/
 
-### IntelliJ IDEA ###
-.idea
+# ============================================
+# IntelliJ IDEA
+# ============================================
+.idea/
 *.iws
 *.iml
 *.ipr
+out/
+# 保留共享的 IDEA 配置
+!.idea/runConfigurations/
+# 排除本地配置
+.idea/workspace.xml
+.idea/dataSources.local.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/shelf/
 
-### NetBeans ###
+# ============================================
+# NetBeans
+# ============================================
 /nbproject/private/
 /nbbuild/
 /dist/
@@ -29,14 +52,110 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### VS Code ###
+# ============================================
+# VS Code
+# ============================================
 .vscode/
+*.code-workspace
 
-### Local config (contains sensitive info) ###
+# ============================================
+# macOS
+# ============================================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# ============================================
+# Windows
+# ============================================
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ============================================
+# Linux
+# ============================================
+*~
+.directory
+.Trash-*
+
+# ============================================
+# 敏感配置文件（包含 API Key 等）
+# ============================================
 src/main/resources/application-local.yaml
+src/main/resources/application-dev.yaml
+src/main/resources/application-prod.yaml
+*.env
+.env.local
+.env.*.local
 
-### Markdown docs (except document folder) ###
+# ============================================
+# 临时文件和缓存
+# ============================================
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+*.swo
+*~.nib
+*.cache
+
+# ============================================
+# 日志文件
+# ============================================
+logs/
+*.log
+*.log.*
+
+# ============================================
+# 数据库文件
+# ============================================
+*.db
+*.sqlite
+*.sqlite3
+
+# ============================================
+# Node.js (前端项目)
+# ============================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+dist/
+dist-ssr/
+*.local
+
+# ============================================
+# 文档（只保留项目必需文档）
+# ============================================
+# 排除所有 Markdown 文件
 *.md
-docs/*.md
-monuo-image-search-mcp-server/*.md
+# 只保留项目核心文档
+!README.md
+!CHANGELOG.md
+!CONTRIBUTING.md
+!LICENSE.md
+
+# 排除所有 docs 目录（开发过程文档）
+docs/
+# 但保留部署文档（README 中引用）
+!docs/DEPLOYMENT.md
+# 保留 RAG 知识库文档
+!src/main/resources/document/
 !src/main/resources/document/*.md
+
+# ============================================
+# AI 和 MCP 相关
+# ============================================
+.claude/
+mcp-servers.local.json
+
+# ============================================
+# 其他
+# ============================================
+HELP.md

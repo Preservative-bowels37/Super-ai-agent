@@ -102,7 +102,6 @@ public class LoveApp {
                 .advisors(spec -> spec.param(ChatMemory.CONVERSATION_ID, chatId))
                 .call()
                 .content();
-        log.info("content: {}", content);
         return content;
     }
 
@@ -143,7 +142,6 @@ public class LoveApp {
                 .advisors(spec -> spec.param(ChatMemory.CONVERSATION_ID, chatId))
                 .call()
                 .entity(LoveReport.class);
-        log.info("loveReport: {}", loveReport);
         return loveReport;
     }
 
@@ -189,7 +187,6 @@ public class LoveApp {
 //                )
                 .call()
                 .content();
-        log.info("content: {}", content);
         return content;
     }
 
@@ -237,7 +234,6 @@ public class LoveApp {
                 .toolContext(toolContext)
                 .call()
                 .content();
-        log.info("content: {}", content);
         return content;
     }
 
